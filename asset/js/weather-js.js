@@ -1,35 +1,54 @@
 
 jQuery(document).ready(function ($) {
 
-    var passLocation = pass_location;
-
     $("#settings").hide();
     $(".style-fa").click(function () {
         $("#settings").toggle();
     });
 
+    var passLocation = pass_location;
+    //=========================================
+    // default ajax call via shortcode location
+    //=========================================
+
+    // current weather
+    $.ajax({
+
+        url: "http://api.openweathermap.org/data/2.5/weather?q="+passLocation+"&units=metric"+"&APPID=a58bf6f48ce107c41ec3522a2ec59a8f",
+        type:"Get",
+        dataType:"jsonp",
+
+        success: function (response) {
+            var show_data = show_weather_data(response);
+            $("#showAjaxData").html(show_data);
+            $('#city').val('');
+            $("#settings").hide();
+        },
+        error:function () {
+            console.log("not done");
+        }
+    });
+
+    // next five days weather
+    $.ajax( {
+
+        url: "http://api.openweathermap.org/data/2.5/forecast?q="+passLocation+"&units=metric&APPID=a58bf6f48ce107c41ec3522a2ec59a8f",
+        type:"Get",
+        dataType:"jsonp",
+
+        success: function (data) {
+            var show_five_data = show_weather_five_day_data(data);
+            $("#showFiveDayAjaxData").html(show_five_data);
+            $('#city').val('');
+        },
+        error:function () {
+            console.log("not done");
+        }
+    });
+
     // ajax call for current weather
     $('#ajaxCall').click(function () {
         var city = $('#city').val();
-
-        if(!city){
-            $.ajax({
-
-                url: "http://api.openweathermap.org/data/2.5/weather?q="+passLocation+"&units=metric"+"&APPID=a58bf6f48ce107c41ec3522a2ec59a8f",
-                type:"Get",
-                dataType:"jsonp",
-
-                success: function (response) {
-                    var show_data = show_weather_data(response);
-                    $("#showAjaxData").html(show_data);
-                    $('#city').val('');
-                    $("#settings").hide();
-                },
-                error:function () {
-                    console.log("not done");
-                }
-            });
-        }else {
             $.ajax({
 
                 url: "http://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric"+"&APPID=a58bf6f48ce107c41ec3522a2ec59a8f",
@@ -46,9 +65,6 @@ jQuery(document).ready(function ($) {
                     console.log("not done");
                 }
             });
-        }
-
-
     });
 
 
@@ -56,24 +72,6 @@ jQuery(document).ready(function ($) {
     $('#ajaxCall').click(function () {
         var city = $('#city').val();
 
-        if(!city){
-            $.ajax( {
-
-                url: "http://api.openweathermap.org/data/2.5/forecast?q="+passLocation+"&units=metric&APPID=a58bf6f48ce107c41ec3522a2ec59a8f",
-                type:"Get",
-                dataType:"jsonp",
-
-                success: function (data) {
-                    var show_five_data = show_weather_five_day_data(data);
-                    $("#showFiveDayAjaxData").html(show_five_data);
-                    $('#city').val('');
-                },
-                error:function () {
-                    console.log("not done");
-                }
-            });
-
-        }else {
             $.ajax( {
 
                 url: "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&units=metric&APPID=a58bf6f48ce107c41ec3522a2ec59a8f",
@@ -84,12 +82,12 @@ jQuery(document).ready(function ($) {
                     var show_five_data = show_weather_five_day_data(data);
                     $("#showFiveDayAjaxData").html(show_five_data);
                     $('#city').val('');
+                    $("#settings").hide();
                 },
                 error:function () {
                     console.log("not done");
                 }
-            })
-        }
+            });
     });
 });
 
