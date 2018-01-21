@@ -7,3 +7,5 @@ Version : 1.0.0 [Update will coming soon]
 3. Remove the “” from the shortcode => Change the shortcode parameter [if you want] 
 4. See the output from your page=> Find your city from the search field and 
 5. Click the “show weather” button for see result.
+
+Take a look : http://imran71.ga/current-weather/
